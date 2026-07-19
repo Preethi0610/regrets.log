@@ -173,7 +173,7 @@ export default function PostPage() {
           className="mb-6 text-3xl font-extrabold tracking-tight"
           style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
         >
-          Write it down
+         <span className="text-pink-300"> let it out.</span>
         </h1>
 
         <form
