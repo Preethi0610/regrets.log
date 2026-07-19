@@ -87,56 +87,56 @@ export default function Home() {
       <div className="mx-auto max-w-2xl px-4 py-10">
 
         <div className="mb-8 flex items-center justify-between">
-<div className="relative inline-block px-6 py-4">
-  {/* top row */}
-  <div className="absolute top-0 left-4 right-4 flex justify-between">
-    {Array.from({ length: 9 }).map((_, i) => (
-      <span
-        key={`top-${i}`}
-        style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.14}s infinite` }}
-        className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
-      />
-    ))}
-  </div>
+          <div className="group relative inline-block px-6 py-4">
+            {/* top row */}
+            <div className="absolute top-0 left-4 right-4 flex justify-between">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <span
+                  key={`top-${i}`}
+                  style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.14}s infinite` }}
+                  className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
+                />
+              ))}
+            </div>
 
-  {/* bottom row */}
-  <div className="absolute bottom-0 left-4 right-4 flex justify-between">
-    {Array.from({ length: 9 }).map((_, i) => (
-      <span
-        key={`bottom-${i}`}
-        style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.14 + 0.3}s infinite` }}
-        className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
-      />
-    ))}
-  </div>
+            {/* bottom row */}
+            <div className="absolute bottom-0 left-4 right-4 flex justify-between">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <span
+                  key={`bottom-${i}`}
+                  style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.14 + 0.3}s infinite` }}
+                  className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
+                />
+              ))}
+            </div>
 
-  {/* left column */}
-  <div className="absolute top-4 bottom-4 left-0 flex flex-col justify-between">
-    {Array.from({ length: 3 }).map((_, i) => (
-      <span
-        key={`left-${i}`}
-        style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.25 + 0.15}s infinite` }}
-        className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
-      />
-    ))}
-  </div>
+            {/* left column */}
+            <div className="absolute top-4 bottom-4 left-0 flex flex-col justify-between">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <span
+                  key={`left-${i}`}
+                  style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.25 + 0.15}s infinite` }}
+                  className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
+                />
+              ))}
+            </div>
 
-  {/* right column */}
-  <div className="absolute top-4 bottom-4 right-0 flex flex-col justify-between">
-    {Array.from({ length: 3 }).map((_, i) => (
-      <span
-        key={`right-${i}`}
-        style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.25 + 0.45}s infinite` }}
-        className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
-      />
-    ))}
-  </div>
+            {/* right column */}
+            <div className="absolute top-4 bottom-4 right-0 flex flex-col justify-between">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <span
+                  key={`right-${i}`}
+                  style={{ animation: `twinkle 1.6s ease-in-out ${i * 0.25 + 0.45}s infinite` }}
+                  className="h-2 w-2 rounded-full bg-yellow-200 shadow-[0_0_6px_2px_rgba(253,224,71,0.7)]"
+                />
+              ))}
+            </div>
 
-  <h1 className="relative text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-200 to-pink-200">
-    Regret.log
-  </h1>
-</div>
-  
+            <h1 className="relative text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-200 to-pink-200">
+              Regret.log
+            </h1>
+          </div>
+
 
           {user ? (
             <div className="flex items-center gap-3">
@@ -172,11 +172,10 @@ export default function Home() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`rounded-full px-3 py-1 text-sm capitalize ${
-                activeCategory === cat
+              className={`rounded-full px-3 py-1 text-sm capitalize ${activeCategory === cat
                   ? 'bg-white text-violet-900'
                   : 'bg-violet-800 text-violet-100 hover:bg-violet-700'
-              }`}
+                }`}
             >
               {cat}
             </button>
