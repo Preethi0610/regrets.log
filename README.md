@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Regret.log
 
-## Getting Started
+Anonymous, categorized regrets people can browse before making a similar decision.
 
-First, run the development server:
+Built as a weekend project — Next.js frontend, Supabase as the backend (Postgres database, Google OAuth, Row Level Security).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## What it does
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Post an anonymous regret: category, title, what happened, and optionally what you'd do instead
+- Browse the public feed, filterable by category, sortable by recency or top reactions
+- React to posts with any emoji — toggle on/off, see live counts
+- Sign in with Google (used only for spam prevention — nothing is shown publicly)
+- Personal dashboard: pick an illustrated avatar, view your own posts, see total reactions received, delete posts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js** (App Router) + React + TypeScript + Tailwind CSS
+- **Supabase** — Postgres database, Google OAuth, Row Level Security for all data access
+- **Vercel** — hosting/deployment
+- Avatars via [DiceBear](https://www.dicebear.com/) (`adventurer` style)
 
-## Learn More
+## Local setup
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repo, `npm install`
+2. Create a Supabase project, run the schema SQL (see `/schema.sql` if included, or Supabase dashboard → SQL Editor)
+3. Enable Google as an auth provider in Supabase (Authentication → Providers), using a Google Cloud OAuth Client ID/Secret
+4. Add `.env.local`:
