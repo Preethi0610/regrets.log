@@ -72,11 +72,37 @@ export default function PostPage() {
   const [body, setBody] = useState('')
   const [alternative, setAlternative] = useState('')
   const [toastMessage, setToastMessage] = useState<string | null>(null)
+  
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      setToastMessage('Please sign in to post')
+      return
+    }
+
+    const startOfToday = new Date()
+    startOfToday.setHours(0, 0, 0, 0)
+
+    const { count, error: countError } = await supabase
+      .from('regrets')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .gte('created_at', startOfToday.toISOString())
+
+    console.log('COUNT:', count, 'ERROR:', countError)
+
+    if (countError) {
+      console.error(countError)
+    }
+
+    if (count !== null && count >= 3) {
+      setToastMessage("That's 3 regrets today. Not judging, but that's a lot, bruh")
+      return
+    }
 
     const { error } = await supabase.from('regrets').insert({
       category,
@@ -100,7 +126,7 @@ export default function PostPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-violet-950 via-violet-900 to-violet-950 text-white">
-      
+
       <StringLights />
 
       <div className="pointer-events-none absolute inset-0">

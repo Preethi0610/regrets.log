@@ -4,9 +4,12 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import ReactionPicker from './components/ReactionPicker'
 import Link from 'next/link'
+import ShareCard from './components/ShareCard'
+import { Share2 } from 'lucide-react'
 
 type Regret = {
   id: string
+  user_id: string
   category: string
   title: string
   body: string
@@ -28,11 +31,34 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [sortBy, setSortBy] = useState<'recent' | 'top'>('recent')
   const [loading, setLoading] = useState(true)
+  const [shareRegret, setShareRegret] = useState<Regret | null>(null)
 
   useEffect(() => {
     checkUser()
     fetchRegrets()
   }, [activeCategory, sortBy])
+
+  function timeAgo(dateStr: string) {
+    const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000)
+    if (seconds < 60) return 'just now'
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes}m ago`
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours}h ago`
+    const days = Math.floor(hours / 24)
+    if (days < 30) return `${days}d ago`
+    const months = Math.floor(days / 30)
+    return `${months}mo ago`
+  }
+
+  function alienTag(userId: string) {
+    let hash = 0
+    for (let i = 0; i < userId.length; i++) {
+      hash = (hash * 31 + userId.charCodeAt(i)) >>> 0
+    }
+    const num = 1000 + (hash % 9000)
+    return `Alien #${num}`
+  }
 
   async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser()
@@ -173,8 +199,8 @@ export default function Home() {
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={`rounded-full px-3 py-1 text-sm capitalize ${activeCategory === cat
-                  ? 'bg-white text-violet-900'
-                  : 'bg-violet-800 text-violet-100 hover:bg-violet-700'
+                ? 'bg-white text-violet-900'
+                : 'bg-violet-800 text-violet-100 hover:bg-violet-700'
                 }`}
             >
               {cat}
@@ -206,11 +232,14 @@ export default function Home() {
             {regrets.map((regret) => (
               <div
                 key={regret.id}
-                className="rounded-2xl bg-violet-800/50 p-4 backdrop-blur"
+                className="relative rounded-2xl bg-violet-800/50 p-4 backdrop-blur"
               >
                 <span className="mb-2 inline-block rounded-full bg-violet-700 px-2 py-0.5 text-xs uppercase tracking-wide text-violet-200">
                   {regret.category}
                 </span>
+                <p className="mb-1 text-xs text-violet-400">
+                  {alienTag(regret.user_id)} · {timeAgo(regret.created_at)}
+                </p>
                 <h2 className="text-lg font-semibold">{regret.title}</h2>
                 <p className="mt-1 text-violet-100">{regret.body}</p>
                 {regret.alternative && (
@@ -220,12 +249,25 @@ export default function Home() {
                 )}
                 <div className="mt-3">
                   <ReactionPicker regretId={regret.id} />
+                  <button
+                    onClick={() => setShareRegret(regret)}
+                    className="absolute bottom-3 right-3 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-violet-300 to-pink-200 shadow-[0_0_10px_3px_rgba(216,180,254,0.5)] transition-transform hover:scale-110"> 
+                    <Share2 className="h-4 w-4 text-violet-900" />
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+      {shareRegret && (
+        <ShareCard
+          title={shareRegret.title}
+          body={shareRegret.body}
+          category={shareRegret.category}
+          onClose={() => setShareRegret(null)}
+        />
+      )}
     </main>
   )
 }

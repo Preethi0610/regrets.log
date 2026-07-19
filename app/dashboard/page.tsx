@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import ConfirmDialog from '../components/ConfirmDialog'
 
 const AVATAR_SEEDS = [
   'Felix', 'Aneka', 'Milo', 'Zoe', 'Gizmo',
@@ -26,6 +27,7 @@ export default function Dashboard() {
   const [myRegrets, setMyRegrets] = useState<Regret[]>([])
   const [totalReactions, setTotalReactions] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   useEffect(() => {
     loadDashboard()
@@ -75,17 +77,22 @@ export default function Dashboard() {
     await supabase.from('users').update({ avatar: seed }).eq('id', user.id)
   }
 
-  async function handleDelete(regretId: string) {
-    const confirmed = confirm('Delete this regret? This cannot be undone.')
-    if (!confirmed) return
+  function askDelete(regretId: string) {
+    setPendingDeleteId(regretId)
+  }
 
-    const { error } = await supabase.from('regrets').delete().eq('id', regretId)
+  async function confirmDelete() {
+    if (!pendingDeleteId) return
+
+    const { error } = await supabase.from('regrets').delete().eq('id', pendingDeleteId)
 
     if (error) {
       console.error(error)
     } else {
-      setMyRegrets((prev) => prev.filter((r) => r.id !== regretId))
+      setMyRegrets((prev) => prev.filter((r) => r.id !== pendingDeleteId))
     }
+
+    setPendingDeleteId(null)
   }
 
   async function signOut() {
@@ -182,7 +189,7 @@ export default function Dashboard() {
                   <p className="text-sm text-violet-200">{regret.body}</p>
                 </div>
                 <button
-                  onClick={() => handleDelete(regret.id)}
+                  onClick={() => askDelete(regret.id)}
                   className="shrink-0 rounded-full bg-red-500/20 px-3 py-1 text-xs text-red-300 hover:bg-red-500/30"
                 >
                   Delete
@@ -192,6 +199,13 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {pendingDeleteId && (
+        <ConfirmDialog
+          onConfirm={confirmDelete}
+          onCancel={() => setPendingDeleteId(null)}
+        />
+      )}
     </main>
   )
 }
